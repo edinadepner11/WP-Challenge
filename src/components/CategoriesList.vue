@@ -12,23 +12,36 @@
 import { defineComponent, PropType } from "vue";
 import Category from "@/types/Categories";
 import { VDataTable } from "vuetify/lib/labs/components.mjs";
+
 export default defineComponent({
   data() {
+    const filteredHeaders = [];
+    for (const key of Object.keys(this.categories[0])) {
+      if (key !== "id" && key !== "iconUrl") {
+        filteredHeaders.push(key);
+      }
+    }
     return {
       itemsPerPage: 5,
-      tableHeaders: Object.keys(this.categories[0]).map((key) => {
-        if (key !== "id") {
+      tableHeaders: [
+        {
+          title: "Logo",
+          value: "logo",
+          align: "center",
+          sortable: true,
+        },
+        ...filteredHeaders.map((key) => {
           return {
             title: key,
             value: key,
             align: "center",
-            sortable: false,
+            sortable: true,
           };
-        }
-        return {};
-      }),
+        }),
+      ],
       categoriesRow: this.categories.map((category) => {
         return {
+          logo: category.iconUrl,
           name: category.name,
           slug: category.slug,
           activeFrom: category.activeFrom,
