@@ -1,56 +1,45 @@
 <template>
-  <div class="d-flex justify-content-center">
-    <table class="table table-striped custom-div">
-      <thead>
-        <!-- <tr>
-          <th v-for="key in Object.keys(categories[0])" :key="key">
-            {{ key }}
-          </th>
-        </tr> -->
-
-        <tr>
-          <th>Icon</th>
-          <template v-for="key in Object.keys(categories[0])">
-            <th :key="key" v-if="key !== 'iconUrl' && key !== 'id'">
-              {{ key }}
-            </th>
-          </template>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- <tr v-for="category in categories" :key="category.id">
-          <td v-for="value in Object.values(category)" :key="value">
-            {{ value }}
-          </td>
-        </tr> -->
-
-        <tr v-for="category in categories" :key="category.id">
-          <td>
-            <img
-              :src="category.iconUrl"
-              alt="Category Icon"
-              style="max-width: 50px"
-            />
-          </td>
-          <template v-for="value in Object.values(category)">
-            <td
-              :key="value"
-              v-if="value !== category.iconUrl && value !== category.id"
-            >
-              {{ value }}
-            </td>
-          </template>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <v-data-table
+    v-model:items-per-page="itemsPerPage"
+    :headers="tableHeaders"
+    :items="categoriesRow"
+    item-value="name"
+    class="elevation-1"
+  ></v-data-table>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import Category from "@/types/Categories";
-import CategoryDiv from "./CategoryDiv.vue";
+import { VDataTable } from "vuetify/lib/labs/components.mjs";
 export default defineComponent({
+  data() {
+    return {
+      itemsPerPage: 5,
+      tableHeaders: Object.keys(this.categories[0]).map((key) => {
+        if (key !== "id") {
+          return {
+            title: key,
+            value: key,
+            align: "center",
+            sortable: false,
+          };
+        }
+        return {};
+      }),
+      categoriesRow: this.categories.map((category) => {
+        return {
+          name: category.name,
+          slug: category.slug,
+          activeFrom: category.activeFrom,
+          activeUntil: category.activeUntil,
+          createdAt: category.createdAt,
+          updatedAt: category.updatedAt,
+        };
+      }),
+    };
+  },
+
   props: {
     categories: {
       required: true,
@@ -63,5 +52,8 @@ export default defineComponent({
 <style scoped>
 .custom-div {
   width: 90%;
+}
+.icon {
+  width: 5%;
 }
 </style>
