@@ -1,29 +1,16 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/admin"></router-link>
   </nav>
   <router-view />
-
-  <div class="app">
-    <CategoriesList :categories="categories" />
-  </div>
+  <div class="app"></div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import CategoriesList from "./components/CategoriesList.vue";
-import Category from "./types/Categories";
-import { categoriesDataSet } from "../src/dataSets/Categories.dataset";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "App",
-  components: { CategoriesList },
-  setup() {
-    const categories = ref<Category[]>(categoriesDataSet);
-
-    return { categories };
-  },
 });
 </script>
 
