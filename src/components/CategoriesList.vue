@@ -20,17 +20,39 @@
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </div>
+      </template>
+      <template v-slot:item.createdAt="{ item }">
+        {{
+          isPopupOpen
+            ? item.createdAt
+            : item.createdAt.slice(0, item.createdAt.indexOf("T"))
+        }}
+      </template>
+      <template v-slot:item.updatedAt="{ item }">
+        {{
+          isPopupOpen
+            ? item.updatedAt
+            : item.updatedAt.slice(0, item.updatedAt.indexOf("T"))
+        }}
       </template></VDataTable
     >
+    <CategoryDetailsPopup
+      :show-popup="isPopupOpen"
+      :category="selectedCategory"
+      @close="closePopup"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import Category from "@/types/Categories";
-// import { VDataTable } from "vuetify/lib/labs/components.mjs";
-// import { VDataTable } from "vuetify/labs/VDataTable";
+import CategoryDetailsPopup from "@/components/CategoryDetailsPopup.vue";
+
 export default defineComponent({
+  components: {
+    CategoryDetailsPopup,
+  },
   data() {
     const filteredHeaders = [];
     for (const key of Object.keys(this.categories[0])) {
@@ -40,6 +62,8 @@ export default defineComponent({
     }
     console.log(this.categories.length);
     return {
+      isPopupOpen: false,
+      selectedCategory: null,
       categoryData: this.categories.length,
       itemsPerPage: 5,
       tableHeaders: [
@@ -66,19 +90,14 @@ export default defineComponent({
       ],
       categoriesRow: this.categories.map((category) => {
         return {
+          id: category.id,
           logo: category.iconUrl,
           name: category.name,
           slug: category.slug,
           activeFrom: category.activeFrom ? category.activeFrom : "N/A",
           activeUntil: category.activeUntil ? category.activeUntil : "N/A",
-          createdAt: category.createdAt.slice(
-            0,
-            category.createdAt.indexOf("T")
-          ),
-          updatedAt: category.updatedAt.slice(
-            0,
-            category.createdAt.indexOf("T")
-          ),
+          createdAt: category.createdAt,
+          updatedAt: category.updatedAt,
         };
       }),
     };
@@ -93,7 +112,13 @@ export default defineComponent({
 
   methods: {
     onViewClick(item: any) {
-      console.log(item);
+      console.log("Clicked on item:", item);
+      this.selectedCategory = item;
+      this.isPopupOpen = true;
+      console.log("selectedCategory set to:", this.selectedCategory);
+    },
+    closePopup() {
+      this.isPopupOpen = false;
     },
 
     onDeleteClick(item: any) {
