@@ -22,8 +22,8 @@ export default {
     category: Object as PropType<Category | null>,
   },
   methods: {
-    closePopup() {
-      this.$emit("close", undefined);
+    closePopup(this: { $emit: (event: string) => void }) {
+      this.$emit("close");
     },
   },
 };
