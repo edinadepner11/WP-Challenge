@@ -112,10 +112,8 @@ export default defineComponent({
 
   methods: {
     onViewClick(item: any) {
-      console.log("Clicked on item:", item);
       this.selectedCategory = item;
       this.isPopupOpen = true;
-      console.log("selectedCategory set to:", this.selectedCategory);
     },
     closePopup() {
       this.isPopupOpen = false;
